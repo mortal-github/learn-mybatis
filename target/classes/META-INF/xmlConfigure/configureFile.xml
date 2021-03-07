@@ -7,6 +7,55 @@
         <property name="username" value="root"/>
         <property name="password" value="root"/>
     </properties>
+    <settings><!--30个设置-->
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="lazeLoadingEnabled" value="false"/>
+        <setting name="aggressiveLazyLoading" value="false"/><!--在 3.4.1 及之前的版本中默认为 true-->
+        <setting name="multipleResultSetsEnabled" value="false"/>
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="userGeneratedKeys" value="false"/>
+        <setting name="autoMappingBehavior" value="PARTIAL"/><!--NONE,PARTIAL, FULL-->
+        <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/><!--NONE,WARNING,FALING-->
+        <setting name="defaultExecutorType" value="SIMPLE"/><!--SIMPLE,REUSE,BATCH-->
+        <setting name="defaultStatementTimeout" value="25"/>
+        <setting name="defaultFetchSize" value="100"/>
+        <setting name="defaultResultSetType" value="DEFAuLT"/><!--FORWARD_ONLY,SCROLL_SENSITIVE,SCROLL_INSENSITIVE,DEFAULT-->
+        <setting name="safeRowBoundsEnabled" value="false"/>
+        <setting name="safeResultHandlerEnabled" value="true"/>
+        <setting name="mapUnderscoreToCamelCase" value="false"/>
+        <setting name="localCacheScope" value="SESSION"/><!--SESSION,STATEMENT-->
+        <setting name="jdbcTypeForNull" value="OTHER"/><!--NULL,VARCHAR,OTHER-->
+        <setting name="lazyLoadTriggerMethods" value="equals,clone,hasCode,toString"/><!--逗号分隔的方法列表-->
+        <setting name="defaultScriptingLanguage" value="org.apache.ibatis.scripting.xmltags.XMLLanguageDriver"/><!--类型别名或完全限定名-->
+        <setting name="callSettersOnNulls" value="false"/>
+        <setting name="returnInstanceForEmptyRow" value="false"/>
+        <setting name="logPrefix" value=""/><!--任何字符串-->
+        <setting name="logImpl" value="NO_LOGGING"/><!--SLF4J,LOG4J,LOG4J2,JDK_LOGGING,COMMONS_LOGGING,STDOUT_LOGGING,NO_LOGGING-->
+        <setting name="proxyFactory" value="JAVASSIST"/><!--CGLIB,JAVASSIST-->
+        <setting name="vfsImpl" value=""/><!--自定义 VFS 的实现的类全限定名，以逗号分隔。-->
+        <setting name="userActualParamName" value="true"/>
+        <setting name="configurationFactory" value=""/><!--类型别名或完全限定名-->
+        <setting name="shrinkWhitespacesInSql" value="false"/>
+        <setting name="defaultSqlProviderType" value=""/><!--类型别名或限定名-->
+    </settings>
+
+    <typeAliases>
+        <typeAlias alias="Author" type="pers.mortal.learn.mybatis.xmlconfigure.Author"/>
+        <package name="domain.blog"/>
+    </typeAliases>
+    <typeHandlers>
+        <typeHandler handler="pers.mortal.learn.mybatis.xmlconfigure.ExampleTypeHandler"/>
+        <package name="pers.mortal.learn.mybatis.xmlconfigure"/>
+    </typeHandlers>
+
+    <objectFactory type="pers.mortal.learn.mybatis.xmlconfigure.ExampleObjectFactory">
+        <property name="someProperty" value="100"/>
+    </objectFactory>
+    <plugins>
+        <plugin interceptor="pers.mortal.learn.mybatis.xmlconfigure.ExamplePlugin">
+            <property name="someProperty" value="100"/>
+        </plugin>
+    </plugins>
 
     <environments default="development">
         <environment id="development">
@@ -19,7 +68,28 @@
             </dataSource>
         </environment>
     </environments>
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="SQL Server" value="sqlserver"/>
+        <property name="DB2" value="db2"/>
+        <property name="Oracle" value="oracle"/>
+    </databaseIdProvider>
+
     <mappers>
-        <mapper resource="META-INF/BlogMapper.xml"/>
+        <!-- 使用相对于类路径的资源引用 -->
+        <mapper resource="org/mybatis/builder/AuthorMapper.xml"/>
+        <mapper resource="org/mybatis/builder/BlogMapper.xml"/>
+        <mapper resource="org/mybatis/builder/PostMapper.xml"/>
+    <!-- 使用完全限定资源定位符（URL） -->
+        <mapper url="file:///var/mappers/AuthorMapper.xml"/>
+        <mapper url="file:///var/mappers/BlogMapper.xml"/>
+        <mapper url="file:///var/mappers/PostMapper.xml"/>
+    <!-- 使用映射器接口实现类的完全限定类名 -->
+        <mapper class="org.mybatis.builder.AuthorMapper"/>
+        <mapper class="org.mybatis.builder.BlogMapper"/>
+        <mapper class="org.mybatis.builder.PostMapper"/>
+    <!-- 将包内的映射器接口实现全部注册为映射器 -->
+        <package name="org.mybatis.builder"/>
     </mappers>
+
+
 </configuration>

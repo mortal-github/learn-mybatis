@@ -18,7 +18,8 @@ public class LearnMybatis
     {
         System.out.println( "Hello World!" );
         //从XML中构建SqlSessionFactroy
-        String resource = "META-INF/mybatis-config.xml";
+        //String resource = "META-INF/mybatis-config.xml";
+        String resource = "META-INF/dynamicsql/dynamicsql-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory xmlSqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         //不适用XML构建SqlSessionFactory
