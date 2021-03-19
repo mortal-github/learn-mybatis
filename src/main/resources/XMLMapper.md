@@ -151,17 +151,29 @@ selectKey 元素的属性
 ```
 
 ### 参数`#{...}`
-之前见到的所有语句都使用了简单的参数形式。  
-但实际上，参数是 MyBatis 非常强大的元素。  
-对于大多数简单的使用场景，你都不需要使用复杂的参数。  
+
+**参数的传递**：  
 - **原始类型或简单数据类型**：（比如 Integer 和 String）因为没有其它属性，会用它们的值来作为参数。  
-- **复杂对象类型**：往往需要一一指定传入对象的**一些属性**。   
-- **简单参数**： `#{property}`。  
+- **复杂对象类型**：使用对象的属性值作为参数（即多参数请况）。   
+> 对于多参数的请况，mybatis实际上接受一个包含多属性的对象作为参数，然后再把属性按属性名与参数名对应，将其值传入预处理语句的参数中。  
+> 如果 User 类型的参数对象传递到了语句中，会查找 id、username 和 password 属性，然后将它们的值传入预处理语句的参数中。  
+```xml
+<insert id="insertUser" parameterType="User">
+  insert into users (id, username, password)
+  values (#{id}, #{username}, #{password})
+</insert>
+```
+
+**参数处理**：  
+>和 MyBatis 的其它部分一样，参数也可以指定一个特殊的数据类型。
+`#{property,javaType=int,jdbcType=NUMERIC}`
+
 - **`javaType, jdbcType`**：指定**数据类型**,`#{property, javaType=int, jdbcType=NUMERIC}`参数可以**指定特殊的数据类型**，一般情况下mybatis可以自动推断java类型。但是如果是**`HashMap`**对象则需要显示指定javaType, 如果有一个列允许使用**null值**，必须指定JDBC类型。  
 - **`typeHandler`**: 指定特殊的**类型处理器类**,`#{property, javaType=int, jdbcType=NUMERIC, typeHandler=MyTypeHandler}`。  
 - **`numericScale`**：指定小数点后保留的位数。 `#{height, javaType=double, jdbcType=NUMERIC, numericScale=2}`   
 - **`mode`**属性：**`IN,OUT,INOUT`**参数。
 - **`STRUCT`**：`#{.... mode=OUT, jdbcType=STRUCT, jdbcTypeName=My_TYPE, resultMap=...}` MyBatis 也支持很多高级的数据类型，比如结构体（structs），但是当使用 out 参数时，你**必须显式设置类型的名称**。  
+
 > 和 MyBatis 的其它部分一样，几乎总是可以根据参数对象的类型确定 javaType，除非该对象是一个 HashMap。这个时候，你需要显式指定 javaType 来确保正确的类型处理器（TypeHandler）被使用。
 > 提示 JDBC 要求，如果一个列允许使用 null 值，并且会使用值为 null 的参数，就必须要指定 JDBC 类型（jdbcType）。阅读 PreparedStatement.setNull()的 JavaDoc 来获取更多信息。
 >

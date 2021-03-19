@@ -41,5 +41,6 @@ public class LearnMybatis
             Blog blog = mapper.selectBlog(1);
             System.out.println(blog.getContent());
         }
+
     }
 }
